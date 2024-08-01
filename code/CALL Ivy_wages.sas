@@ -14,7 +14,7 @@ Data:card.xls
 Ref: Wooldridge Source: D. Card (1995), Using Geographic Variation in College Proximity to Estimate the Return to Schooling,
 in Aspects of Labour Market Behavior: Essays in Honour of John Vanderkamp. Ed. L.N. Christophides, E.K. Grant, 
 and R. Swidinsky, 201-222. Toronto: University of Toronto Press.   */;
-proc import datafile="C:\Users\gparvathinathan\Box\IV methods paper\JSM\Data\educ_wages.csv" dbms=csv out=wages ;
+proc import datafile="..\data\educ_wages.csv" dbms=csv out=wages ;
 run;
 proc contents data=wages;
 run;
@@ -22,21 +22,18 @@ run;
 data wages_1;
 set wages;
 married_1=(married=1);
-wages_binary=(wage > 500);
 drop var1 married;
 run; 
 proc contents data=wages_1;run;
-proc freq data=wages_1;
-table wages_binary married_1;run;
 
 /************************************************************************************************************
 * Now, let's set up parameters below
 *************************************************************************************************************/
 
-%include "C:\Users\gparvathinathan\Box\IV methods paper\JSM\GitHUB/IVY.sas";
-%let datain=" "; 				/*Location of permanent SAS dataset. Leave it blank, if your dataset is in the work library*/	
-%let dataout="C:\Users\gparvathinathan\Box\IV methods paper\JSM\Results";				/*Location of one-pager report will be saved*/												
-%let dataset=wages_1;					/*Name of the dataset*/	;				
+%include ".\IVY.sas";
+%let datain=" "; 			/*Location of permanent SAS dataset. Leave it blank, if your dataset is in the work library*/	
+%let dataout="..\results";		/*Location of one-pager report will be saved*/												
+%let dataset=wages_1;			/*Name of the dataset*/	;				
 %let relevancereportname=Recentwages_relevance;				/*Name of the report for relevance assumption
 						  If you leave it blank, this program will give a name as "Relevance assumption Report" */
 
