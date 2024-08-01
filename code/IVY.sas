@@ -101,8 +101,9 @@ run;
 %end;
 
 ods pdf file="&dataout.\&reportname..pdf"; 
-title 'Relevance Assumption';
-
+title  j=c "Relevance Assumption:"; 
+title2 j=c "There is a strong association between endogenous variable and IV";
+title4 j=c "Check for P-values for the IV in the parameter estimates";
 *Relevance assumption;
 
 proc reg data=work.IV_df ;
@@ -315,16 +316,19 @@ proc delete data=smd;run;
 %end;
 
 *Setting the reportname for the exclusion assumption report;
-%if &exclusionreportname.=  %then %do;
-   %let reportname=Exclusion assumption Report;				
+%if &exchangereport.=  %then %do;
+   %let reportname=Exchangeability assumption Report;				
 %end;
 %else %do;
-   %let reportname = &exclusionreportname. ;
+   %let reportname = &exchangereport. ;
 %end;
+
 
 *Copying calculated smd to the report;
 ods pdf file="&dataout.\&reportname..pdf";
- title 'Exclusion Assumption';
+ title j=c 'Exchangeability Assumption';
+ title2 j=c "The exogenous variables and IV are uncorrelated";
+title4 j=c "Check for max absolute value of SMD <= 0.5";
 proc print data=smd;
 run;
 ods pdf close;
@@ -425,7 +429,9 @@ ods select all;
 * Copying the estimates to the report;
 ods pdf file="&dataout.\&reportname..pdf"; 
 title 'Estimates from Bootstrapping';
-proc print data=BT_estimates;
+proc print data=BT_estimates LABEL;
+    label LCLM = 'Lower 95% CL for Mean'
+		  UCLM = 'Upper 95% CL for Mean';
 run;
 ods pdf close;
 %mend;
